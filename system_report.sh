@@ -1,12 +1,17 @@
 get_cpu_usage() {
+    top -b -n 1 > cpu.txt
     echo "CPU Usage:"
-    top -bn1 | grep '%Cpu' | awk '{print "  CPU: " $2 "% user, " $4 "% system"}'
+    grep "%Cpu(s)" cpu.txt | awk '{print "  Usage by user: " $2 "%"}'
+    grep "%Cpu(s)" cpu.txt | awk '{print "  Usage by system: " $4 "%"}'
 
 }
 
 get_ram_usage() {
     echo "RAM Usage:"
-    free -h | awk '/^Mem:/ {print "  Total: " $2, ", Used: " $3, ", Free: " $4}'
+    free -h > ram.txt
+    grep "Mem" ram.txt | awk '/^Mem:/ {print "  Total: " $2}'
+    grep "Mem" ram.txt | awk '/^Mem:/ {print "  Used: " $3}'
+    grep "Mem" ram.txt | awk '/^Mem:/ {print "  Free: " $4}'
 }
 
 get_report() {
@@ -16,3 +21,7 @@ get_report() {
 }
 
 get_report
+
+rm cpu.txt
+rm ram.txt
+
